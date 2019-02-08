@@ -1,4 +1,4 @@
-myvenv/
+env/
 .vscode/
 .pytest_cache/
 *.pyc

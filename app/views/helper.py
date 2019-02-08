@@ -22,10 +22,14 @@ def token_required(func):
             return jsonify({
                 "status": 400,
                 "message": "Token  missing"
-            })
+            }), 400
         try:
             user_id = User.decode_auth_token(token)
             current_user = user_id
+            if not isinstance(current_user, int):
+                return jsonify({
+                    "message":current_user
+                })
 
         except:
             message = "Invalid token"

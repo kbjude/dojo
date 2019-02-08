@@ -6,12 +6,12 @@ cursor = DatabaseConnection.cursor()
 class Incident:
   cursor.execute('''CREATE TABLE IF NOT EXISTS incident
                 (incident_id SERIAL PRIMARY KEY,
-                incident_type VARCHAR(50) NOT NULL,
-                title VARCHAR(50) NOT NULL,
+                incident_type VARCHAR(225) NOT NULL,
+                title VARCHAR(225) NOT NULL,
                 created_by INTEGER NOT NULL,
-                location VARCHAR(50) NOT NULL,
-                status  VARCHAR(50) DEFAULT 'draft',
-                comment VARCHAR(50),
+                location VARCHAR(225) NOT NULL,
+                status  VARCHAR(225) DEFAULT 'draft',
+                comment VARCHAR(225),
                 created_on TIMESTAMP DEFAULT Now(),
                 FOREIGN KEY (created_by)
                   REFERENCES users (user_id)
@@ -64,7 +64,7 @@ class Incident:
     return all_incidents
 
   @staticmethod
-  def update_location(incident_id, location):
+  def update_location(user_id, incident_id, location):
     DatabaseConnection.cursor()
     query = "UPDATE incident SET location = '{}' WHERE incident_id = '{}';".format(location, incident_id)
     cursor.execute(query)
@@ -74,12 +74,22 @@ class Incident:
     DatabaseConnection.cursor()
     query = "UPDATE incident SET location = '{}' WHERE incident_id = '{}';".format(comment, incident_id)
     cursor.execute(query)
+# if login:
+    # return jsonify({
+    #   "status":200,
+    #   "message":"Login successful"
+    # }), 200
 
   @staticmethod
   def update_the_status(incident_id, status):
     DatabaseConnection.cursor()
     query = "UPDATE incident SET status = '{}' WHERE incident_id = '{}';".format(status, incident_id)
     cursor.execute(query)
-
-
   
+  @staticmethod
+  def get_user_type(user_id):
+    DatabaseConnection.cursor()
+    query = "SELECT is_admin FROM users WHERE user_id = '{}'".format(user_id)
+    cursor.execute(query)
+    get_the_user = cursor.fetchone()
+    return get_the_user[0]
