@@ -39,9 +39,5 @@ class LoginUser(MethodView):
     if validate_login.login_validations(contentType, data) is not True:
       return validate_login.login_validations(contentType, data)
 
-    login = User.login_user(data["username"])
-    if login:
-      return jsonify({
-        "status":200,
-        "message":"Login successful"
-      }), 200
+    return User.login_user(data["username"], data["password"])
+    

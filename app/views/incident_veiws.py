@@ -3,10 +3,13 @@ from flask.views import MethodView
 from flask import request, jsonify
 from app.views.validations import Validations
 from app.models.incident_model import Incident
+from app.views.helper import token_required
 
 
 class CreateIncident(MethodView):
-    def post(self):
+    @token_required
+    def post(current_user, self):
+   
         contentType = request.content_type
         data = request.get_json()
 
@@ -15,20 +18,28 @@ class CreateIncident(MethodView):
         if validate_create_incident.create_incident_validate(contentType, data) is not True:
             return validate_create_incident.create_incident_validate(contentType, data)
 
+        # get_user_type is a method that gets us the user_id which is actually the same as our current_user.ths helps us to check for is_admin is true or not 
+        if Incident.get_user_type(current_user) == "True":
+            return jsonify({
+                "status":401,
+                "messsage":"you donot have acess to this endpoint"
+            }), 401
         # create an object from our class Incident # incident = Incident()
-        incident = Incident(incident_type=data["incident_type"], title=data["title"], created_by=data["created_by"],
-                            location=data["location"], status=data["status"], comment=data["comment"])
+        # we assign current_user to be equal to created_by bcz its our foreign key and its refernced by the user id in the database 
+        incident = Incident(incident_type=data["incident_type"], title=data["title"], created_by=current_user, location=data["location"], status=data["status"], comment=data["comment"])
+
 
         # persist our created incident data in the database
         # we are return the most recent id in the incident list
         incident.save()
         return jsonify({
-            "id": Incident.check_created_incident(data["created_by"]),
+            "incident_id": Incident.check_created_incident(current_user),
             "status": 201,
             "message": "Incident created Successfully"
         }), 201
-
-    def get(self, incident_id):
+    # this method gets all incidents and also gets us one incident
+    @token_required
+    def get(current_user, self, incident_id):
         if incident_id is None:
             return jsonify({
                 "status": 200,
