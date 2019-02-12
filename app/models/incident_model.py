@@ -70,18 +70,13 @@ class Incident:
     cursor.execute(query)
    
   @staticmethod
-  def update_comment(incident_id, comment):
+  def update_comment(user_id, incident_id, comment):
     DatabaseConnection.cursor()
-    query = "UPDATE incident SET location = '{}' WHERE incident_id = '{}';".format(comment, incident_id)
+    query = "UPDATE incident SET comment = '{}' WHERE incident_id = '{}';".format(comment, incident_id)
     cursor.execute(query)
-# if login:
-    # return jsonify({
-    #   "status":200,
-    #   "message":"Login successful"
-    # }), 200
 
   @staticmethod
-  def update_the_status(incident_id, status):
+  def update_the_status(user_id, incident_id, status):
     DatabaseConnection.cursor()
     query = "UPDATE incident SET status = '{}' WHERE incident_id = '{}';".format(status, incident_id)
     cursor.execute(query)
@@ -93,3 +88,9 @@ class Incident:
     cursor.execute(query)
     get_the_user = cursor.fetchone()
     return get_the_user[0]
+
+  @staticmethod
+  def delete_incident(user_id, incident_id):
+    DatabaseConnection.cursor()
+    query = "DELETE incident FROM incident WHERE incident_id = '{}'".format(incident_id)
+    cursor.execute(query)

@@ -23,3 +23,4 @@ class UpdateStatus:
   def update_status(app):
     Update_status_veiw = Status.as_view("update_a_status")
     app.add_url_rule("/incident/<int:incident_id>/status", view_func=Update_status_veiw, methods=["PUT"])
+    app.add_url_rule("/incident/<int:incident_id>", view_func=Update_status_veiw, methods=["DELETE"])

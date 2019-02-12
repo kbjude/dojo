@@ -28,7 +28,6 @@ class CreateIncident(MethodView):
         # we assign current_user to be equal to created_by bcz its our foreign key and its refernced by the user id in the database 
         incident = Incident(incident_type=data["incident_type"], title=data["title"], created_by=current_user, location=data["location"], status=data["status"], comment=data["comment"])
 
-
         # persist our created incident data in the database
         # we are return the most recent id in the incident list
         incident.save()
@@ -41,17 +40,24 @@ class CreateIncident(MethodView):
     @token_required
     def get(current_user, self, incident_id):
         if incident_id is None:
+            if Incident.get_user_type(current_user) == "True":
+                return jsonify({
+                    "status": 200,
+                    "data": Incident.get_all_incident()
+                }), 200
+            return jsonify({
+                "status": 400,
+                "message": "You cannot acess this endpoint"
+            }),400
+
+        if Incident.get_user_type(current_user):
             return jsonify({
                 "status": 200,
-                "data": Incident.get_all_incident()
-            })
-
-        return jsonify({
-            "status": 200,
-            "data": Incident.get_an_incident(incident_id)[0]
-        }),200
-
-    def put(self, incident_id):
+                "data": Incident.get_an_incident(incident_id)[0]
+            }),200
+        
+    @token_required
+    def put(current_user, self, incident_id):
         location = request.json['location']
         if not isinstance(location, str):
             return jsonify({
@@ -73,7 +79,13 @@ class CreateIncident(MethodView):
                 "error": "Please provide a valid Incident Id"
             }), 400
 
-        Incident.update_location(int(incident_id), location)
+        if Incident.get_user_type(current_user) == "True":
+            return jsonify({
+                "status": 400,
+                "message": "You donot have acess to this endpoint"
+            })
+
+        Incident.update_location(current_user, int(incident_id), location)
         return jsonify({
             "status": 200,
             "data": [{"id": int(incident_id),
@@ -83,7 +95,8 @@ class CreateIncident(MethodView):
 
 
 class Updates(MethodView):
-    def put(self, incident_id):
+    @token_required
+    def put(current_user, self, incident_id):
         comment = request.json["comment"]
         if not isinstance(comment, str):
             return jsonify({
@@ -107,7 +120,13 @@ class Updates(MethodView):
                 "error": "Please provide a valid Incident Id"
             }), 400
 
-        Incident.update_comment(incident_id, comment)
+        if Incident.get_user_type(current_user) == "True":
+            return jsonify({
+                "status":400,
+                "message":"You dont  have acess to this endpoint"
+            }), 400
+
+        Incident.update_comment(current_user, int(incident_id), comment)
         return jsonify({
             "status": 200,
             "data": [{"id": int(incident_id),
@@ -117,7 +136,8 @@ class Updates(MethodView):
 
 
 class Status(MethodView):
-    def put(self, incident_id):
+    @token_required
+    def put(current_user, self, incident_id):
         status = request.json["status"]
         if not isinstance(status, str):
             return jsonify({
@@ -145,10 +165,27 @@ class Status(MethodView):
                 "error": "Please provide a valid Incident Id"
             }), 400
 
-        Incident.update_the_status(incident_id, status)
+        if Incident.get_user_type(current_user) != "True":
+            return jsonify({
+                "status": 200,
+                "data":Incident.update_the_status(current_user, incident_id, status),
+                "message": "Updated  intervention record’s status"
+            })
         return jsonify({
-            "status": 200,
-            "data": [{ "id":int(incident_id),
-                      "message": "Updated  intervention record’s status"
-                      }]
-        })
+            "status":400,
+            "message":"You dont have acces to this endpoint"
+        }), 400
+
+        
+    @token_required
+    def delete(current_user, self, incident_id):
+        if Incident.get_user_type(current_user) == "True":
+            return jsonify({
+                "status":200,
+                "data": Incident.delete_incident(),
+                "message": "Incident record deleted"
+                }), 200
+        return jsonify({
+                "status":400,
+                "message":"Sorry you donot have  to delete this Incident record"
+            }), 400
