@@ -94,3 +94,8 @@ class Incident:
     DatabaseConnection.cursor()
     query = "DELETE incident FROM incident WHERE incident_id = '{}'".format(incident_id)
     cursor.execute(query)
+
+  @staticmethod
+  def drop_tables():
+    DatabaseConnection()
+    query = " DROP incident and users"

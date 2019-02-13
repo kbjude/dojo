@@ -36,7 +36,13 @@ class Validations:
                 "status": 400,
                 "message": "username/email/should be strings,A phone number should be an integer, is_admin should be a Boolean"
             }), 400
-            
+
+        if not isinstance(phone_number, int) and len(phone_number)  > 12:
+            return jsonify({
+                "status":400,
+                "message": "The digits should not be more than 12 digits"
+            }),400
+
         if  not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return jsonify({
                 "status":400,
