@@ -57,7 +57,7 @@ class User:
       return jsonify({
         'status': 200,
         # we call a class user in our user model and the method that generates the token, we also  decode the bcause we want to be able to see the token
-        'data': [{"token": User.encode_auth_token(user_login[0]['user_id']).decode('utf-8'), "user": user_login[0] }]
+        'data': [{"token": User.encode_auth_token(user_login[0]['user_id']).decode('utf-8'), "user": user_login[0], "message": "Login sucessful" }]
       }), 200
 
     return jsonify({
