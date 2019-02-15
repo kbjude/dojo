@@ -1,9 +1,9 @@
 import psycopg2
 from flask import Flask
-from flask_bcrypt import Bcrypt
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+# bcrypt = Bcrypt(app)
 
 app.config["SECRET_KEY"] = "thisismysecretkey"
 

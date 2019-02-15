@@ -10,7 +10,7 @@ class Validations:
         if contentType != "application/json":
             return jsonify({
                 "status": 400,
-                "message": " Wrong content Type"
+                "message": "Wrong content Type"
             }), 400
 
         if "username" not in data or "password" not in data or "email" not in data or "phone_number" not in data or "is_admin" not in data:

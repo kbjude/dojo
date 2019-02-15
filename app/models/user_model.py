@@ -1,8 +1,11 @@
 import datetime
 import jwt
-from app import app ,bcrypt
+from app import app 
+from passlib.hash import sha256_crypt
+# from Werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
 from app import DatabaseConnection
+
 cursor = DatabaseConnection.cursor()
 
 #  create a table for users
@@ -17,8 +20,8 @@ class User:
 
   def __init__(self, **kwargs):
     self.username = kwargs["username"]
-    self.password = bcrypt.generate_password_hash(kwargs["password"], app.config.get("BCRYPT_LOG_ROUNDS")).decode('utf-8')
-    # self.password = kwargs["password"]
+    self.password = sha256_crypt.hash(kwargs["password"])
+    # self.password = generate_password_hash(kwargs["password"])
     self.email = kwargs["email"]
     self.phone_number = kwargs["phone_number"]
     self.is_admin = kwargs["is_admin"]
@@ -53,7 +56,9 @@ class User:
     # returns the first record from the database that matches the provided username.
     user_login = cursor.fetchone()
     # check if the user_login list is not empty and also if the provided password matches with the hashed password in our database.
-    if user_login and bcrypt.check_password_hash(user_login[0]['password'], password):
+
+    if user_login and sha256_crypt.verify(password,user_login[0]['password']):
+    # if user_login and bcrypt.check_password_hash(user_login[0]['password'], password):
       return jsonify({
         'status': 200,
         # we call a class user in our user model and the method that generates the token, we also  decode the bcause we want to be able to see the token
@@ -109,6 +114,12 @@ class User:
 
     except jwt.InvalidTokenError:
       return "Invalid Key.Please sign in again"
+
+  def drop_table_users(self):
+      query = "DROP TABLE users CASCADE;"
+      self.cursor.execute(query)
+      return "Dropped"
+
 
 class BlacklistToken:
   """Table to store blacklisted/invalid auth tokens"""

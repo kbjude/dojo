@@ -4,7 +4,7 @@ from flask import request ,jsonify
 from app.views.validations import Validations
 from app.models.user_model import User
 from app.views.helper import token_required
-from flask_bcrypt import Bcrypt
+
 
 
 
