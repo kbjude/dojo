@@ -1,14 +1,6 @@
 # chal-3-ireporter
 
 # IREPORTER
-This is an online application that let users nagavigate through the application.
-I-Reporter is a platform where people can report incidents of corruption.
-Users can do the following;
-Create a ​red-flag​​ record, Get all ​red-flag​​ records, Get a specific ​red-flag​​ record Edit a specific ​red-flag​​ record and also Delete a ​red-flag​​ record
-
-A self journalism report system which lets a user to create red flags and interventions .Report on different incidents of corruption that are affecting them and can call for help from government.
-
-This is the User Interface of the project, User creates account. The user can also just login if account is created already.This is an online application that let users nagavigate through the application.
 I-Reporter is a platform where people can report incidents of corruption.
 Users can do the following;
 Create a ​red-flag​​ record, Get all ​red-flag​​ records, Get a specific ​red-flag​​ record Edit a specific ​red-flag​​ record and also Delete a ​red-flag​​ record
