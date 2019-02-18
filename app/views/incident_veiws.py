@@ -18,7 +18,7 @@ class CreateIncident(MethodView):
         if validate_create_incident.create_incident_validate(contentType, data) is not True:
             return validate_create_incident.create_incident_validate(contentType, data)
 
-        # get_user_type is a method that gets us the user_id which is actually the same as our current_user.ths helps us to check for is_admin is true or not 
+        # get_user_type is a method that gets us the user_id which is actually the same as our current_user.ths helps us to check for is_admin is true or not if an admin then you cannotcreate incidents
         if Incident.get_user_type(current_user) == "True":
             return jsonify({
                 "status":401,
@@ -165,7 +165,7 @@ class Status(MethodView):
                 "error": "Please provide a valid Incident Id"
             }), 400
 
-        if Incident.get_user_type(current_user) != "True":
+        if Incident.get_user_type(current_user) == "True":
             return jsonify({
                 "status": 200,
                 "data":Incident.update_the_status(current_user, incident_id, status),
@@ -179,12 +179,41 @@ class Status(MethodView):
         
     @token_required
     def delete(current_user, self, incident_id):
-        if Incident.get_user_type(current_user) == "True":
+        if  not isinstance(incident_id, int):
+            return  jsonify({
+                "status": 400,
+                "message": "incident id should be a integer"
+            }), 400
+
+        # if  username and email in Incident.checkuser_exits():
+        #     return jsonify({
+        #         "status": 400,
+        #         "message":"user already exists"
+        # }) ,400
+
+        incident_in = Incident.check_if_user_id_matches_the_incident_id(current_user, incident_id)
+        print(incident_in)
+        if not incident_in:
+            return jsonify ({  
+            "status":404, 
+            "error" : "No incident record found with this id"
+            }), 404
+
+        #we can not delete a record with statuses of 'under investigation','rejected','resolved'
+        #get the status which is in position 6 of the returned list
+
+        required_status_list = ["under investigation","rejected","resolved"]
+        if incident_in[0] in required_status_list:
             return jsonify({
-                "status":200,
-                "data": Incident.delete_incident(),
-                "message": "Incident record deleted"
-                }), 200
+                "status":400,
+                "message":"You cannot edit, delete this status because it was updated already"
+            }), 400
+
+        Incident.delete_incident(current_user, incident_id)
+        return jsonify({
+            "status":200,
+            "message": "Incident record deleted"
+            }), 200
         return jsonify({
                 "status":400,
                 "message":"Sorry you donot have  to delete this Incident record"
