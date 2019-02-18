@@ -92,10 +92,29 @@ class Incident:
   @staticmethod
   def delete_incident(user_id, incident_id):
     DatabaseConnection.cursor()
-    query = "DELETE incident FROM incident WHERE incident_id = '{}'".format(incident_id)
+    query = "DELETE FROM incident WHERE incident_id = '{}'".format(incident_id)
     cursor.execute(query)
 
   @staticmethod
   def drop_tables():
     DatabaseConnection()
     query = " DROP incident and users"
+
+  # @staticmethod
+  # def checkuser_exits():
+  #   DatabaseConnection.cursor()
+  #   query = "SELECT user_id from users WHERE username = '{}' AND email = '{}'".format(email, username)
+  #   cursor.execute(query)
+  #   user_got = cursor.fetchone()
+  #   #get users id w/c is in position 0 of the returned list
+  #   return user_got[0]
+
+#check for the record matching the user's id and incident id
+  @staticmethod
+  def  check_if_user_id_matches_the_incident_id(created_by, incident_id):
+    DatabaseConnection.cursor()
+    query = "SELECT status FROM incident WHERE created_by = '{}' AND incident_id = '{}'".format(created_by, incident_id)
+    cursor.execute(query)
+    incident_matching = cursor.fetchone()
+    return incident_matching
+    
