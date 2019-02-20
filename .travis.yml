@@ -8,7 +8,7 @@ services:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-before script:
+before_script:
   - psql -c 'create database testdb;' -U postgres
 # command to run tests
 script: 
