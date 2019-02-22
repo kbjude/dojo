@@ -1,8 +1,7 @@
 # chal-3-ireporter
 
 # IREPORTER
-[![Build Status](https://travis-ci.org/jennizalwango/chal-3-ireporter.svg?branch=master)](https://travis-ci.org/jennizalwango/chal-3-ireporter)
-
+[![Build Status](https://travis-ci.org/jennizalwango/chal-3-ireporter.svg?branch=chall3)](https://travis-ci.org/jennizalwango/chal-3-ireporter)
 
 I-Reporter is a platform where people can report incidents of corruption.
 Users can do the following;
