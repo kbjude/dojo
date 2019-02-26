@@ -6,8 +6,6 @@ from app.models.user_model import User
 from app.views.helper import token_required
 
 
-
-
 class SignupUser(MethodView):
   def post(self):
     data = request.get_json()

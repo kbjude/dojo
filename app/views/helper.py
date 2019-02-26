@@ -2,12 +2,12 @@ import datetime
 import jwt
 from functools import wraps
 from flask import request, jsonify
-from app.config import Config
+from app.config import BaseConfig
 from app import DatabaseConnection
 from app.models.user_model import User
 
 cursor = DatabaseConnection.cursor()
-configuration = Config()
+configuration = BaseConfig()
 
 configuration.SECRET_KEY
 
