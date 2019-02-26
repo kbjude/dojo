@@ -40,7 +40,8 @@ class User:
   @staticmethod
   def check_user(username, email):
     cursor = DatabaseConnection.cursor()
-    query = "SELECT row_to_json(users) FROM users WHERE username = '{}' OR email = '{}';".format(
+    # here we use subquries because we dont want to return some data from the database like the password 
+    query = "SELECT row_to_json(result) FROM (SELECT user_id, username, email, phone_number, is_admin FROM users) result WHERE username = '{}' OR email = '{}';".format(
         username, email)
     cursor.execute(query)
     user = cursor.fetchone()

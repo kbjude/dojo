@@ -18,11 +18,11 @@ class CreateIncident(MethodView):
         if validate_create_incident.create_incident_validate(contentType, data) is not True:
             return validate_create_incident.create_incident_validate(contentType, data)
 
-        # get_user_type is a method that gets us the user_id which is actually the same as our current_user.ths helps us to check for is_admin is true or not if an admin then you cannotcreate incidents
+        # get_user_type is a method that gets us the user_id which is actually the same as our current_user.this helps us to check for is_admin is true or not if an admin then you cannotcreate incidents
         if Incident.get_user_type(current_user) == "True":
             return jsonify({
                 "status":401,
-                "messsage":"you donot have acess to this endpoint"
+                "messsage":"You donot have acess to this endpoint"
             }), 401
         # create an object from our class Incident # incident = Incident()
         # we assign current_user to be equal to created_by bcz its our foreign key and its refernced by the user id in the database 

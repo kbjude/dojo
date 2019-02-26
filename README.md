@@ -48,7 +48,8 @@ Go on and install pylint to help you run the tests of the application
 
 ### To set up your database
  You are to install postgres on your machine 
- Then set your database name to jenny 
+ Then set your database name to jenny
+ You are required to create the  environment variables in the config file
 
 ### To run the tests:
   `python -m pytest`  or

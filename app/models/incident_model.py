@@ -24,8 +24,7 @@ class Incident:
     self.created_by = kwargs["created_by"]
     self.location = kwargs["location"]
     self.status = kwargs["status"]
-    self.comment = kwargs["comment"]
-
+    self.comment = kwargs["comment"]           
 
   #  save is the same as create incident in the database
   def save(self):
@@ -98,7 +97,41 @@ class Incident:
   @staticmethod
   def drop_tables():
     DatabaseConnection()
-    query = " DROP incident and users"
+    queries = (
+      """DROP TABLE IF EXISTS incident(
+                incident_id SERIAL PRIMARY KEY,
+                incident_type VARCHAR(225) NOT NULL,
+                title VARCHAR(225) NOT NULL,
+                created_by INTEGER NOT NULL,
+                location VARCHAR(225) NOT NULL,
+                status  VARCHAR(225) DEFAULT 'draft',
+                comment VARCHAR(225),
+                created_on TIMESTAMP DEFAULT Now(),
+                FOREIGN KEY (created_by)
+                  REFERENCES users (user_id)
+                  ON UPDATE CASCADE ON DELETE CASCADE,
+                  )
+                
+                """,
+
+                """
+                DROP TABLE IF EXISTS users(
+                user_id SERIAL PRIMARY KEY   NOT NULL,
+                username VARCHAR(225) NOT NULL,
+                password VARCHAR(225) NOT NULL,
+                email VARCHAR(225) NOT NULL,
+                phone_number VARCHAR(225) NOT NULL,
+                is_admin VARCHAR(225) NOT NULL
+                )
+                
+                """
+      )
+    
+
+    for query in queries:
+      cursor.execute(query)
+    cursor.close()
+  
 
   # @staticmethod
   # def checkuser_exits():
