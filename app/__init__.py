@@ -7,7 +7,10 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "thisismysecretkey"
 
-DatabaseConnection = psycopg2.connect(database ="jenny", password = "postgres", user ="postgres", host="localhost", port=5432)
+# DatabaseConnection = psycopg2.connect(database ="jenny", password = "postgres", user ="postgres", host="localhost", port=5432)
+
+
+DatabaseConnection = psycopg2.connect(database ="testdb")
 
 from app.routes.user_routes import UserUrl
 UserUrl.get_user_routes(app)
