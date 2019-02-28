@@ -14,11 +14,7 @@ app.config.from_object(config)
 #   user = config.DATABASE_USER, 
 #   host = config.DATABASE_HOST, 
 #   port = 5432
-  )
-
-# create_db_tables()
-# if os.getenv() === ''
-
+#   )
 
 DatabaseConnection = psycopg2.connect(database ="testdb")
 
