@@ -14,7 +14,8 @@ class BaseTestCase(TestCase):
 
 
   def tearDown(self):
-    User.drop_tables()
+    pass
+    # User.drop_tables()
     
   
   def register_user(self, username, password, email, phone_number, is_admin):
