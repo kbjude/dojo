@@ -13,11 +13,34 @@ DatabaseConnection = psycopg2.connect(
   password = config.DATABASE_PASSWORD, 
   user = config.DATABASE_USER, 
   host = config.DATABASE_HOST, 
-  port = 5432
+  port = config.DATABASE_PORT
   )
 
-# create_db_tables()
-# if os.getenv() === ''
+# DatabaseConnection = psycopg2.connect(os.environ.get('URI'))
+DatabaseConnection.autocommit = True
+cursor = DatabaseConnection.cursor()
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS users
+                (user_id SERIAL PRIMARY KEY  NOT NULL,
+                username VARCHAR(225) NOT NULL,
+                password VARCHAR(225) NOT NULL,
+                email VARCHAR(225) NOT NULL,
+                phone_number VARCHAR(225) NOT NULL,
+                is_admin VARCHAR(225) NOT NULL);''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS incident
+                (incident_id SERIAL PRIMARY KEY,
+                incident_type VARCHAR(225) NOT NULL,
+                title VARCHAR(225) NOT NULL,
+                created_by INTEGER NOT NULL,
+                location VARCHAR(225) NOT NULL,
+                status  VARCHAR(225) DEFAULT 'draft',
+                comment VARCHAR(225),
+                created_on TIMESTAMP DEFAULT Now(),
+                FOREIGN KEY (created_by)
+                  REFERENCES users (user_id)
+                  ON UPDATE CASCADE ON DELETE CASCADE);
+                ''')
 
 
 # DatabaseConnection = psycopg2.connect(database ="testdb")

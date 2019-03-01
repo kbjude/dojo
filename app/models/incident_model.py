@@ -4,20 +4,7 @@ from app import DatabaseConnection
 cursor = DatabaseConnection.cursor()
 
 class Incident:
-  cursor.execute('''CREATE TABLE IF NOT EXISTS incident
-                (incident_id SERIAL PRIMARY KEY,
-                incident_type VARCHAR(225) NOT NULL,
-                title VARCHAR(225) NOT NULL,
-                created_by INTEGER NOT NULL,
-                location VARCHAR(225) NOT NULL,
-                status  VARCHAR(225) DEFAULT 'draft',
-                comment VARCHAR(225),
-                created_on TIMESTAMP DEFAULT Now(),
-                FOREIGN KEY (created_by)
-                  REFERENCES users (user_id)
-                  ON UPDATE CASCADE ON DELETE CASCADE);
-                ''')
-
+ 
   def __init__(self, **kwargs):
     self.incident_type = kwargs["incident_type"]
     self.title = kwargs["title"]
