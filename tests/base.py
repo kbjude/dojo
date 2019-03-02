@@ -1,6 +1,6 @@
 import json
 from unittest import TestCase
-from app import DatabaseConnection
+from app.database.connection import cursor
 from app import app
 from app.models.user_model import User
 
@@ -8,9 +8,9 @@ user = User()
 
 
 class BaseTestCase(TestCase):
-    def setUp(self):
-        cursor = DatabaseConnection.cursor()
-        self.client = app.test_client()
+  def setUp(self):
+    self.client = app.test_client()
+   
 
     def tearDown(self):
         user.drop_table_users()
