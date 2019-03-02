@@ -1,4 +1,3 @@
-from app import DatabaseConnection
 from flask.views import MethodView
 from flask import request ,jsonify
 from app.views.validations import Validations
@@ -38,4 +37,3 @@ class LoginUser(MethodView):
       return validate_login.login_validations(contentType, data)
 
     return User.login_user(data["username"], data["password"])
-    
