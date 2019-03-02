@@ -1,9 +1,9 @@
 import datetime
 import jwt
 from app import app
-from passlib.hash import sha256_crypt
+# from passlib.hash import sha256_crypt
 
-# from Werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
 from app.database.connection import cursor
 
@@ -24,8 +24,8 @@ class User:
 
     def __init__(self, **kwargs):
         self.username = kwargs["username"]
-        self.password = sha256_crypt.hash(kwargs["password"])
-        # self.password = generate_password_hash(kwargs["password"])
+        # self.password = sha256_crypt.hash(kwargs["password"])
+        self.password = generate_password_hash(kwargs["password"])
         self.email = kwargs["email"]
         self.phone_number = kwargs["phone_number"]
         self.is_admin = kwargs["is_admin"]
