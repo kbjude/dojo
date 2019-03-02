@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from flask import Flask
-from passlib.hash import sha256_crypt
+# from passlib.handlers.sha2_crypt import sha512_crypt
 from app.config import configuration
 
 app = Flask(__name__)
@@ -9,14 +9,13 @@ config = configuration.get(os.environ.get("APP_ENV", "development"))
 app.config.from_object(config)
 
 DatabaseConnection = psycopg2.connect(
-  database = config.DATABASE_NAME, 
-  password = config.DATABASE_PASSWORD, 
-  user = config.DATABASE_USER, 
-  host = config.DATABASE_HOST, 
-  port = config.DATABASE_PORT
-  )
+    database=config.DATABASE_NAME,
+    password=config.DATABASE_PASSWORD,
+    user=config.DATABASE_USER,
+    host=config.DATABASE_HOST,
+    port=config.DATABASE_PORT
+    )
 
-# DatabaseConnection = psycopg2.connect(os.environ.get('URI'))
 DatabaseConnection.autocommit = True
 cursor = DatabaseConnection.cursor()
 
@@ -42,8 +41,6 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS incident
                   ON UPDATE CASCADE ON DELETE CASCADE);
                 ''')
 
-
-# DatabaseConnection = psycopg2.connect(database ="testdb")
 
 from app.routes.user_routes import UserUrl
 UserUrl.get_user_routes(app)

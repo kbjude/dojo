@@ -1,25 +1,23 @@
 import datetime
 import jwt
 from app import app
-from passlib.hash import sha256_crypt
-# from Werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
 from app import DatabaseConnection
 
 cursor = DatabaseConnection.cursor()
 
-#  create a table for users
-
 
 class User:
 
     def __init__(self, **kwargs):
-        self.username = kwargs["username"]
-        self.password = sha256_crypt.hash(kwargs["password"])
+        self.username = kwargs.get("username")
+        self.password = generate_password_hash(kwargs.get("password"),
+                                               method='sha256')
         # self.password = generate_password_hash(kwargs["password"])
-        self.email = kwargs["email"]
-        self.phone_number = kwargs["phone_number"]
-        self.is_admin = kwargs["is_admin"]
+        self.email = kwargs.get("email")
+        self.phone_number = kwargs.get("phone_number")
+        self.is_admin = kwargs.get("is_admin")
 
     # Save is the same as creating user in the data base
     def save(self):
@@ -59,9 +57,9 @@ class User:
         user_login = cursor.fetchone()
         # check if the user_login list is not empty and also if the
         #  provided password matches with the hashed password in our database.
-        raw_password = user_login[0]['password']
+        hashed_password = user_login[0]['password']
 
-        if user_login and sha256_crypt.verify(password, raw_password):
+        if user_login and check_password_hash(hashed_password, password):
             token = User.encode_auth_token(
                 user_login[0]['user_id']).decode('utf-8')
 
@@ -135,8 +133,17 @@ class User:
 
     def drop_table_users(self):
         query = "DROP TABLE users CASCADE;"
-        self.cursor.execute(query)
+        cursor.execute(query)
         return "Dropped"
+
+    def create_table_users(self):
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users
+                (user_id SERIAL PRIMARY KEY  NOT NULL,
+                username VARCHAR(225) NOT NULL,
+                password VARCHAR(225) NOT NULL,
+                email VARCHAR(225) NOT NULL,
+                phone_number VARCHAR(225) NOT NULL,
+                is_admin VARCHAR(225) NOT NULL);''')
 
 
 class BlacklistToken:
