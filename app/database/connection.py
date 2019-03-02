@@ -10,7 +10,7 @@ try:
         password=app.config["DATABASE_PASSWORD"],
         user=app.config["DATABASE_USER"],
         host=app.config["DATABASE_HOST"],
-        port=5432
+        port=app.config["DATABASE_PORT"]
     )
 
     DatabaseConnection.autocommit = True
