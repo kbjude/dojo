@@ -6,7 +6,6 @@ from flask import jsonify
 from app.database.connection import cursor
 
 
-
 class User:
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS users
