@@ -4,9 +4,8 @@ from app import app
 from passlib.hash import sha256_crypt
 # from Werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
-from app import DatabaseConnection
+from app.database.connection import cursor
 
-cursor = DatabaseConnection.cursor()
 
 #  create a table for users
 class User:
@@ -28,18 +27,15 @@ class User:
 
   # Save is the same as creating user in the data base
   def save(self):
-    cursor = DatabaseConnection.cursor()
     query = """
               INSERT INTO users(username, password, email, phone_number,is_admin)
               VALUES('{}', '{}', '{}', '{}', '{}')""".format(self.username, self.password,
               self.email, self.phone_number, self.is_admin)
     cursor.execute(query)
-    DatabaseConnection.commit()
 
   # do a query to check if our user exists in the database by using the username and the email
   @staticmethod
   def check_user(username, email):
-    cursor = DatabaseConnection.cursor()
     # here we use subquries because we dont want to return some data from the database like the password 
     query = "SELECT row_to_json(result) FROM (SELECT user_id, username, email, phone_number, is_admin FROM users) result WHERE username = '{}' OR email = '{}';".format(
         username, email)
@@ -50,7 +46,6 @@ class User:
   # do a query to login the user into the system
   @staticmethod
   def login_user(username, password):
-    cursor = DatabaseConnection.cursor()
     query = "SELECT row_to_json(users) FROM users WHERE username = '{}';".format(
         username)
     cursor.execute(query)
@@ -124,7 +119,6 @@ class User:
 
 class BlacklistToken:
   """Table to store blacklisted/invalid auth tokens"""
-  cursor = DatabaseConnection.cursor()
   cursor.execute("""CREATE TABLE IF NOT EXISTS blacklist_token
   (id SERIAL PRIMARY KEY NOT NULL,
   token VARCHAR(50) NOT NULL,
@@ -138,7 +132,6 @@ class BlacklistToken:
     """Persist Blacklisted token in the database
     :return:
     """
-    cursor = DatabaseConnection.cursor()
     query = "INSERT INTO blacklist_token(token, blacklisted_on) VALUES('{}', '{}')".format(self.token, self.Blacklisted_on)
     cursor.execute(query, (self.token, self.Blacklisted_on))
     cursor.commit()
@@ -149,7 +142,6 @@ class BlacklistToken:
     :param token: Authorization token
     :return:
     """
-    cursor = DatabaseConnection.cursor()
     query = """SELECT token FROM blacklist_token WHERE token = '{}'"""
     cursor.execute(query, (token))
     response = cursor.fetchone()

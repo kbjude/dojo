@@ -1,5 +1,6 @@
-myenv/
+/venv
 .vscode/
 .pytest_cache/
 *.pyc
 .__pycache__/
+.env
