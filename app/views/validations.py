@@ -31,7 +31,7 @@ class Validations:
                 "message": ["username/email/phone number/is_Admin/should not be empty", "password should not be empty"]
             }), 400
 
-        if not isinstance(username, str) or not isinstance(email, str) or not isinstance(is_admin,bool) or not isinstance(phone_number, int):
+        if not isinstance(username, str) or not isinstance(email, str) or not isinstance(is_admin,bool) or not isinstance(phone_number, str):
             return jsonify({
                 "status": 400,
                 "message": "username/email/should be strings,A phone number should be an integer, is_admin should be a Boolean"
